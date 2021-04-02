@@ -121,13 +121,10 @@ public class BloodBankLogic extends GenericLogic<BloodBank, BloodBankDAL>{
             Logger.getLogger(BloodBankLogic.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        int owner_id = Integer.parseInt(parameterMap.get(OWNER_ID)[0]);
         String name = parameterMap.get(NAME)[0];
         Boolean privatelyOwned = Boolean.valueOf(parameterMap.get(PRIVATELY_OWNED)[0]);
         int employee_count = Integer.parseInt(parameterMap.get(EMPLOYEE_COUNT)[0]);
-        // validate types other than String?
         
-        entity.setOwner(new Person(owner_id)); // TODO: find owner? create? correct?
         entity.setName(name);
         entity.setPrivatelyOwned(privatelyOwned);
         entity.setEmplyeeCount(employee_count);
