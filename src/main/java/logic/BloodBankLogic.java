@@ -112,19 +112,12 @@ public class BloodBankLogic extends GenericLogic<BloodBank, BloodBankDAL>{
         //stored in an array of String; almost always the value is at
         //index zero unless you have used duplicated key/name somewhere.
         
-        //TODO: validate other types from parameterMap?
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        try {
-            Date established = formatter.parse(parameterMap.get(ESTABLISHED)[0]);
-            entity.setEstablished(established);
-        } catch (ParseException ex) {
-            Logger.getLogger(BloodBankLogic.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        Date established = convertStringToDate(parameterMap.get(ESTABLISHED)[0]);
         String name = parameterMap.get(NAME)[0];
         Boolean privatelyOwned = Boolean.valueOf(parameterMap.get(PRIVATELY_OWNED)[0]);
         int employee_count = Integer.parseInt(parameterMap.get(EMPLOYEE_COUNT)[0]);
         
+        entity.setEstablished(established);
         entity.setName(name);
         entity.setPrivatelyOwned(privatelyOwned);
         entity.setEmplyeeCount(employee_count);
