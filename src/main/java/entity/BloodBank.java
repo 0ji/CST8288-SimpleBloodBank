@@ -163,7 +163,7 @@ public class BloodBank implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.BloodBank[ bankId=" + bankId + " ]";
+        return bankId.toString();
     }
 
 }

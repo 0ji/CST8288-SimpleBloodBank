@@ -1,8 +1,12 @@
 package logic;
 
+import java.io.UncheckedIOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.juli.logging.Log;
 
 public abstract class LogicFactory {
 
@@ -13,26 +17,26 @@ public abstract class LogicFactory {
     }
 
     public static < T> T getFor(String entityName) {
-
+        T newInstance=null;
         try {
             Class<T> type = (Class<T>) (Class.forName(PACKAGE + entityName + SUFFIX));
-            T newInstance = getFor(type);
-            return newInstance;
+            newInstance = getFor(type);
         } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(LogicFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return newInstance;
     }
 
     public static < T> T getFor(Class<T> type) {
+         T newInstance=null;
         try {
             Constructor<T> declaredConstructor = type.getDeclaredConstructor();
-            T newInstance = declaredConstructor.newInstance();
-            return newInstance;
+            newInstance = declaredConstructor.newInstance();
+            
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(LogicFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return newInstance;
     }
 }
