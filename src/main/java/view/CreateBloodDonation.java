@@ -3,6 +3,8 @@ package view;
 import common.EMFactory;
 import entity.BloodBank;
 import entity.BloodDonation;
+import entity.BloodGroup;
+import entity.RhesusFactor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -51,9 +53,7 @@ public class CreateBloodDonation extends HttpServlet {
             out.println("<div style=\"display: inline-block; text-align: left;\">");
             out.println("<form method=\"post\">");
             out.println("Milliliters:<br>");
-            //instead of typing the name of column manualy use the static vraiable in logic
-            //use the same name as column id of the table. will use this name to get date
-            //from parameter map.
+         
             out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", BloodDonationLogic.MILLILITERS);
             out.println("<br>");
             out.println("Blood Bank ID:<br>");
@@ -61,14 +61,15 @@ public class CreateBloodDonation extends HttpServlet {
             out.println("<br>");
             out.println("Blood Group: <br>");;
             out.printf("<select name=\"%s\">", BloodDonationLogic.BLOOD_GROUP);
-            out.println("<option value=\"A\">A</option>");
-            out.println("<option value=\"B\">B</option>");
-            out.println("<option value=\"AB\">AB</option>");
-            out.println("<option value=\"O\">O</option>");
+            out.printf("<option value=\"%s\">A</option>", BloodGroup.A);
+            out.printf("<option value=\"%s\">B</option>", BloodGroup.B);
+            out.printf("<option value=\"%s\">AB</option>", BloodGroup.AB);
+            out.printf("<option value=\"%s\">O</option>", BloodGroup.O);
             out.println("</select><br><br>");
-            out.println("<select name=\"rhesus_factor\">");
-            out.println("<option value=\"Positive\">Positive</option>");
-            out.println("<option value=\"Negative\">Negative</option>");
+            out.println("RHD: <br>");
+            out.printf("<select name=\"%s\">", BloodDonationLogic.RHESUS_FACTOR);
+            out.printf("<option value=\"%s\">Positive</option>", RhesusFactor.Positive);
+            out.printf("<option value=\"%s\">Negative</option>", RhesusFactor.Negative);
             out.println("</select><br><br>");
             out.println("<input type=\"submit\" name=\"view\" value=\"Add and View\">");
             out.println("<input type=\"submit\" name=\"add\" value=\"Add\">");
@@ -133,9 +134,9 @@ public class CreateBloodDonation extends HttpServlet {
         Integer bbInt= Integer.parseInt(request.getParameter(BloodDonationLogic.BANK_ID));
         BloodBank bb = em.find(BloodBank.class,bbInt );
         
-       // String bbString= bb.toString();
-        //Integer bbInt = Integer.parseInt(bbString);
-                
+  /**
+   * check if dependency blood bank entity exists. if not, generate error message
+   */              
         if (bb == null) {
             errorMessage = "BloodBank: \"" + BloodDonationLogic.BANK_ID + "\" does not exists";
         } else {

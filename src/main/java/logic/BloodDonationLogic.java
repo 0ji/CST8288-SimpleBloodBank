@@ -90,48 +90,62 @@ public class BloodDonationLogic extends GenericLogic<BloodDonation, BloodDonatio
         //create a new Entity object
         BloodDonation bloodDonation = new BloodDonation();  //NEVER CREATE ANY OTHER TYPE OF ENTTIY. ONLY ACCOUNT ENTITY HERE
 
-       /** if (parameterMap.containsKey(ID)) {
+        if( parameterMap.containsKey( ID ) ){
             try {
-                bloodDonation.setId(Integer.parseInt(parameterMap.get(ID)[0]));
-            } catch (java.lang.NumberFormatException ex) {
-                throw new ValidationException(ex);
+                bloodDonation.setId( Integer.parseInt( parameterMap.get( ID )[ 0 ] ) );
+            } catch( java.lang.NumberFormatException ex ) {
+                throw new ValidationException( ex );
             }
-        }*/
-
+        }
+        
         if (parameterMap.containsKey(MILLILITERS)) {
+            String error = "";
+            if(Integer.parseInt(parameterMap.get(MILLILITERS)[0]) > 0 ){
             try {
                 bloodDonation.setMilliliters(Integer.parseInt(parameterMap.get(MILLILITERS)[0]));
             } catch (java.lang.NumberFormatException ex) {
                 throw new ValidationException(ex);
             }
+        }else{
+                error="value cannot be less than zero";
+                throw new IllegalArgumentException();
+            }
         }
 
         if (parameterMap.containsKey(BANK_ID)) {
-            try {
+            try{    
+              
                 EntityManager em = EMFactory.getEMF().createEntityManager();
                 Integer bbInt = Integer.parseInt(parameterMap.get(BANK_ID)[0]);
                 BloodBank bb = em.find(BloodBank.class, bbInt);
                 bloodDonation.setBloodBank(bb);
-                //TO-DO NULL CHECK BLOODBANK
+             
             } catch (java.lang.NumberFormatException ex) {
                 throw new ValidationException(ex);
             }
         }
-           
-        bloodDonation.setCreated(Calendar.getInstance().getTime());
-       /** if (parameterMap.containsKey(CREATED)) {
+        
+         /**
+          * only really applies for testing as there is no Created key yet for new entries
+          */
+       if (parameterMap.containsKey(CREATED)) {
             try {
                 Date date = convertStringToDate(parameterMap.get(CREATED)[0]);
-                entity.setCreated(date);
+                bloodDonation.setCreated(date);
             } catch (Exception e) {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
                 Date currentDate = new Date(System.currentTimeMillis());
                 String formattedDate = (formatter.format(currentDate));
                 Date convertedFormattedDate = convertStringToDate(formattedDate);
-                entity.setCreated(convertedFormattedDate);
-                throw new ValidationException(e);
+                bloodDonation.setCreated(convertedFormattedDate);
+                //throw new ValidationException(e);
             }
-        }*/
+        }else{
+           /**
+         * this will generate a timestamp based on the data and time of data submission
+         */   
+           bloodDonation.setCreated(Calendar.getInstance().getTime());
+       }
 
         if (parameterMap.containsKey(BLOOD_GROUP)) {
             try {
@@ -150,4 +164,5 @@ public class BloodDonationLogic extends GenericLogic<BloodDonation, BloodDonatio
         
         return bloodDonation;
     }
+    
 }
