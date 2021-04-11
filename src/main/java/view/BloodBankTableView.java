@@ -132,4 +132,5 @@ public class BloodBankTableView extends HttpServlet {
     public void log( String msg, Throwable t ) {
         String message = String.format( "[%s] %s", getClass().getSimpleName(), msg );
         getServletContext().log( message, t );
+    }
 }
