@@ -130,35 +130,39 @@ public class CreateBloodBank extends HttpServlet {
         BloodBankLogic bbLogic = LogicFactory.getFor("BloodBank");
 //        PersonLogic pLogic = LogicFactory.getFor("Person");
         
-        // there can be no owner for the bloodbank. so...
-        // if owner = empty, still make it (with an empty owner)
-        // otherwise make it with the person constructor
+        String name = request.getParameter( BloodBankLogic.NAME );
         String owner_id = request.getParameter( BloodBankLogic.OWNER_ID );
-        log(owner_id);
         
-        if ( owner_id.isEmpty() || owner_id.isBlank() ) { 
-            try {
-                BloodBank bloodbank = bbLogic.createEntity( request.getParameterMap() );
-                bbLogic.add( bloodbank );
-            } catch ( Exception ex ) {
-                errorMessage = ex.getMessage();
-            }
-        } 
-//        else {
-//            // if person exists
-//            Person owner = pLogic.getWithId(Integer.parseInt(owner_id));
-//            if (owner != null) {
-//                try {
-//                BloodBank bloodbank = bbLogic.createEntity( request.getParameterMap() );
-//                bloodbank.setOwner(owner);
-//                } catch (Exception ex) {
-//                    errorMessage = ex.getMessage();
+        if ( bbLogic.getBloodBankWithName(name) != null ) {
+            if ( owner_id.isEmpty() || owner_id.isBlank() ) { 
+                try {
+                    BloodBank bloodbank = bbLogic.createEntity( request.getParameterMap() );
+                    bbLogic.add( bloodbank );
+                } catch ( Exception ex ) {
+                    errorMessage = ex.getMessage();
+                }
+            } 
+            // commented out till Person is functional
+//            else {
+//                // grab person entity, if exists
+//                Person owner = pLogic.getWithId(Integer.parseInt(owner_id));
+//                // check if owner isn't null, and doesn't own a blood bank already
+//                if (owner != null && bbLogic.getBloodBanksWithOwner(Integer.parseInt(owner_id)) == null) {
+//                    try {
+//                        BloodBank bloodbank = bbLogic.createEntity( request.getParameterMap() );
+//                        bloodbank.setOwner(owner);
+//                        bbLogic.add( bloodbank );
+//                    } catch (Exception ex) {
+//                        errorMessage = ex.getMessage();
+//                    }
+//                //if person owns a blood bank, show error
+//                } else {
+//                    errorMessage = "Owner: \"" + owner_id + "\" owns a blood bank already.";
 //                }
-//            //if person does not exist show error
-//            } else {
-//                errorMessage = "Owner: \"" + owner_id + "\" does not exist";
 //            }
-//        }
+        } else {
+            errorMessage = "BloodBank name: \"" + name + "\" already exists";
+        }
         
         if( request.getParameter( "add" ) != null ){
             //if add button is pressed return the same page
