@@ -60,7 +60,7 @@ public class CreateBloodBank extends HttpServlet {
             out.printf( "<input type=\"radio\" name=\"%s\" value=\"true\"> Yes<br>", BloodBankLogic.PRIVATELY_OWNED );
             out.println( "<br>" );
             out.println( "Established:<br>" );
-            out.printf( "<input type=\"text\" name=\"%s\" value=\"11-11-11 11:11:11\"><br>", BloodBankLogic.ESTABLISHED );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\" placeholder=\"yyyy-MM-dd hh:mm:ss\"><br>", BloodBankLogic.ESTABLISHED );
             out.println( "<br>" );
             out.println( "Employee Count:<br>" );
             out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", BloodBankLogic.EMPLOYEE_COUNT );
@@ -133,7 +133,8 @@ public class CreateBloodBank extends HttpServlet {
         String name = request.getParameter( BloodBankLogic.NAME );
         String owner_id = request.getParameter( BloodBankLogic.OWNER_ID );
         
-        if ( bbLogic.getBloodBankWithName(name) != null ) {
+        // check to see if bloodbank with name doesn't exist already
+        if ( bbLogic.getBloodBankWithName(name) == null ) {
             if ( owner_id.isEmpty() || owner_id.isBlank() ) { 
                 try {
                     BloodBank bloodbank = bbLogic.createEntity( request.getParameterMap() );
