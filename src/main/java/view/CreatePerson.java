@@ -55,7 +55,7 @@ public class CreatePerson extends HttpServlet {
             out.println( "<br>" );
                 
             out.println( "Phone Number:<br>" );
-            out.printf( "<input type=\"tel\" name=\"%s\" value=\"\"><br>", PersonLogic.PHONE );
+            out.printf( "<input type=\"tel\" name=\"%s\" pattern=\"[0-9]{3}-[0-9]{2}-[0-9]{3}\"><br>", PersonLogic.PHONE );
             out.println( "<br>" );
                 
             out.println( "Address:<br>" );
@@ -63,7 +63,7 @@ public class CreatePerson extends HttpServlet {
             out.println( "<br>" );
                 
             out.println( "Birth Date:<br>" );
-            out.printf( "<input type=\"date\" name=\"%s\" value=\"\"><br>", PersonLogic.BIRTH );
+            out.printf( "<input type=\"date\" name=\"%s\" value=\"\" min=\"1900-01-01\" max=\"2021-04-13\"><br>", PersonLogic.BIRTH );
             out.println( "<br>" );
                 
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
