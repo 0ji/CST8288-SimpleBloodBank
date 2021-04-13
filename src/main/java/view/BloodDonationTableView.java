@@ -1,25 +1,27 @@
 package view;
 
-import entity.Account;
+import entity.BloodDonation;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import logic.AccountLogic;
+import logic.BloodDonationLogic;
 import logic.Logic;
 import logic.LogicFactory;
 
 /**
  *
- * @author Shariar (Shawn) Emami
+ * @author camyk
  */
-@WebServlet(name = "AccountTable", urlPatterns = {"/AccountTable"})
-public class AccountTableView extends HttpServlet {
+@WebServlet(name = "BloodDonationTable", urlPatterns = {"/BloodDonationTable"})
+public class BloodDonationTableView extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,58 +33,39 @@ public class AccountTableView extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException{
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>AccountViewNormal</title>");
+            out.println("<title>BloodDonationView</title>");
             out.println("</head>");
             out.println("<body>");
-
+           // out.println("<h1>Servlet BloodDonationView at " + request.getContextPath() + "</h1>");
             out.println("<table style=\"margin-left: auto; margin-right: auto;\" border=\"1\">");
-            out.println("<caption>Account</caption>");
-            //this is an example, for your other tables use getColumnNames from
-            //logic to create headers in a loop.
 
-//            AccountLogic logic = LogicFactory.getFor( "Account" );
-            Logic<Account> logic = LogicFactory.getFor("Account");
+            out.println("<caption>BloodDonation</caption>");
+            Logic<BloodDonation> bdLogic = LogicFactory.getFor("BloodDonation");
             out.println("<tr>");
-            logic.getColumnNames().forEach(c -> out.printf("<th>%s</th>", c));
-//            out.println( "<th>ID</th>" );
-//            out.println( "<th>Displayname</th>" );
-//            out.println( "<th>Username</th>" );
-//            out.println( "<th>Password</th>" );
+            bdLogic.getColumnNames().forEach(c -> out.printf("<th>%s</th>", c));
             out.println("</tr>");
-
-//            List<Account> entities = logic.getAll();
-//            for( Account e: entities ) {
-//                //for other tables replace the code bellow with
-//                //extractDataAsList in a loop to fill the data.
-//                out.printf( "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
-//                        logic.extractDataAsList( e ).toArray() );
-//            }
-            logic.getAll().forEach(e -> out.printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
-                    logic.extractDataAsList(e).toArray()));
-
-            out.println("<tr>");
-            //this is an example, for your other tables use getColumnNames from
-            //logic to create headers in a loop.
-            logic.getColumnNames().forEach(c -> out.printf("<th>%s</th>", c));
-//            out.println( "<th>ID</th>" );
-//            out.println( "<th>Displayname</th>" );
-//            out.println( "<th>Username</th>" );
-//            out.println( "<th>Password</th>" );
-            out.println("</tr>");
+            
+            bdLogic.getAll().forEach(e -> out.printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>",
+                    bdLogic.extractDataAsList(e).toArray()));
+            
+           
             out.println("</table>");
             out.printf("<div style=\"text-align: center;\"><pre>%s</pre></div>", toStringMap(request.getParameterMap()));
+
             out.println("</body>");
             out.println("</html>");
+
         }
     }
-
-    private String toStringMap(Map<String, String[]> m) {
+    
+   private String toStringMap(Map<String, String[]> m) {
         StringBuilder builder = new StringBuilder();
         for (String k : m.keySet()) {
             builder.append("Key=").append(k)
@@ -92,7 +75,7 @@ public class AccountTableView extends HttpServlet {
         }
         return builder.toString();
     }
-
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -120,10 +103,16 @@ public class AccountTableView extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         log("POST");
-        AccountLogic logic = LogicFactory.getFor("Account");
-        Account account = logic.updateEntity(request.getParameterMap());
-        logic.update(account);
-        processRequest(request, response);
+        BloodDonationLogic logic;
+        try {
+            logic = LogicFactory.getFor("BloodDonation");
+             BloodDonation bloodDonation = logic.updateEntity(request.getParameterMap());
+        logic.update(bloodDonation);
+        } catch (Exception ex) {
+            Logger.getLogger(BloodDonationTableView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+       processRequest(request, response);
     }
 
     /**
@@ -133,10 +122,10 @@ public class AccountTableView extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Sample of Account View Normal";
-    }
-
-    private static final boolean DEBUG = true;
+        return "Get View of BloodDonation Table";
+    }// </editor-fold>
+    
+     private static final boolean DEBUG = true;
 
     public void log(String msg) {
         if (DEBUG) {
@@ -149,4 +138,5 @@ public class AccountTableView extends HttpServlet {
         String message = String.format("[%s] %s", getClass().getSimpleName(), msg);
         getServletContext().log(message, t);
     }
+
 }
