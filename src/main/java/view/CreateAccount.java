@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -124,8 +126,10 @@ public class CreateAccount extends HttpServlet {
     protected void doPost( HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException {
         log( "POST" );
-        AccountLogic aLogic = LogicFactory.getFor( "Account" );
-        String username = request.getParameter( AccountLogic.USERNAME );
+        AccountLogic aLogic;
+        try {
+            aLogic = LogicFactory.getFor( "Account" );
+            String username = request.getParameter( AccountLogic.USERNAME );
         if( aLogic.getAccountWithUsername( username ) == null ){
             try {
                 Account account = aLogic.createEntity( request.getParameterMap() );
@@ -137,6 +141,10 @@ public class CreateAccount extends HttpServlet {
             //if duplicate print the error message
             errorMessage = "Username: \"" + username + "\" already exists";
         }
+        } catch (Exception ex) {
+            Logger.getLogger(CreateAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         if( request.getParameter( "add" ) != null ){
             //if add button is pressed return the same page
             processRequest( request, response );

@@ -29,57 +29,57 @@ import javax.validation.constraints.NotNull;
  * @author Shariar
  */
 @Entity
-@Table( name = "blood_donation", catalog = "simplebloodbank", schema = "", uniqueConstraints = {
-    @UniqueConstraint( columnNames = { "donation_id" } ) } )
-@NamedQueries( {
-    @NamedQuery( name = "BloodDonation.findAll", query = "SELECT b FROM BloodDonation b" ),
-    @NamedQuery( name = "BloodDonation.findByDonationId", query = "SELECT b FROM BloodDonation b WHERE b.donationId = :donationId" ),
-    @NamedQuery( name = "BloodDonation.findByMilliliters", query = "SELECT b FROM BloodDonation b WHERE b.milliliters = :milliliters" ),
-    @NamedQuery( name = "BloodDonation.findByBloodGroup", query = "SELECT b FROM BloodDonation b WHERE b.bloodGroup = :bloodGroup" ),
-    @NamedQuery( name = "BloodDonation.findByRhd", query = "SELECT b FROM BloodDonation b WHERE b.rhd = :rhd" ),
-    @NamedQuery( name = "BloodDonation.findByBloodBank", query = "SELECT b FROM BloodDonation b WHERE b.bloodBank.bankId = :bloodBankId" ),
-    @NamedQuery( name = "BloodDonation.findByCreated", query = "SELECT b FROM BloodDonation b WHERE b.created = :created" ) } )
+@Table(name = "blood_donation", catalog = "simplebloodbank", schema = "", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"donation_id"})})
+@NamedQueries({
+    @NamedQuery(name = "BloodDonation.findAll", query = "SELECT b FROM BloodDonation b"),
+    @NamedQuery(name = "BloodDonation.findByDonationId", query = "SELECT b FROM BloodDonation b WHERE b.donationId = :donationId"),
+    @NamedQuery(name = "BloodDonation.findByMilliliters", query = "SELECT b FROM BloodDonation b WHERE b.milliliters = :milliliters"),
+    @NamedQuery(name = "BloodDonation.findByBloodGroup", query = "SELECT b FROM BloodDonation b WHERE b.bloodGroup = :bloodGroup"),
+    @NamedQuery(name = "BloodDonation.findByRhd", query = "SELECT b FROM BloodDonation b WHERE b.rhd = :rhd"),
+    @NamedQuery(name = "BloodDonation.findByBloodBank", query = "SELECT b FROM BloodDonation b WHERE b.bloodBank.bankId = :bloodBankId"),
+    @NamedQuery(name = "BloodDonation.findByCreated", query = "SELECT b FROM BloodDonation b WHERE b.created = :created")})
 public class BloodDonation implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
-    @Basic( optional = false )
-    @Column( name = "donation_id", nullable = false )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "donation_id", nullable = false)
     private Integer donationId;
-    @Basic( optional = false )
+    @Basic(optional = false)
     @NotNull
-    @Column( name = "milliliters", nullable = false )
+    @Column(name = "milliliters", nullable = false)
     private int milliliters;
-    @Basic( optional = false )
+    @Basic(optional = false)
     @NotNull
-    @Column( name = "blood_group", nullable = false, length = 2 )
-    @Enumerated( EnumType.STRING )
+    @Column(name = "blood_group", nullable = false, length = 2)
+    @Enumerated(EnumType.STRING)
     private BloodGroup bloodGroup;
-    @Basic( optional = false )
+    @Basic(optional = false)
     @NotNull
-    @Column( name = "rhd", nullable = false )
-    @Convert( converter = RhesusFactorConvertor.class, disableConversion = false )
+    @Column(name = "rhd", nullable = false)
+    @Convert(converter = RhesusFactorConvertor.class, disableConversion = false)
     private RhesusFactor rhd;
-    @Basic( optional = false )
+    @Basic(optional = false)
     @NotNull
-    @Column( name = "created", nullable = false )
-    @Temporal( TemporalType.TIMESTAMP )
+    @Column(name = "created", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date created;
-    @JoinColumn( name = "bank_id", referencedColumnName = "bank_id" )
-    @ManyToOne( fetch = FetchType.LAZY )
+    @JoinColumn(name = "bank_id", referencedColumnName = "bank_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private BloodBank bloodBank;
-    @OneToMany( mappedBy = "bloodDonation", fetch = FetchType.LAZY )
+    @OneToMany(mappedBy = "bloodDonation", fetch = FetchType.LAZY)
     private Set<DonationRecord> donationRecordSet;
 
     public BloodDonation() {
     }
 
-    public BloodDonation( Integer donationId ) {
+    public BloodDonation(Integer donationId) {
         this.donationId = donationId;
     }
 
-    public BloodDonation( Integer donationId, int milliliters, BloodGroup bloodGroup, RhesusFactor rhd, Date created ) {
+    public BloodDonation(Integer donationId, int milliliters, BloodGroup bloodGroup, RhesusFactor rhd, Date created) {
         this.donationId = donationId;
         this.milliliters = milliliters;
         this.bloodGroup = bloodGroup;
@@ -91,7 +91,7 @@ public class BloodDonation implements Serializable {
         return donationId;
     }
 
-    public void setId( Integer donationId ) {
+    public void setId(Integer donationId) {
         this.donationId = donationId;
     }
 
@@ -99,7 +99,7 @@ public class BloodDonation implements Serializable {
         return milliliters;
     }
 
-    public void setMilliliters( int milliliters ) {
+    public void setMilliliters(int milliliters) {
         this.milliliters = milliliters;
     }
 
@@ -107,7 +107,7 @@ public class BloodDonation implements Serializable {
         return bloodGroup;
     }
 
-    public void setBloodGroup( BloodGroup bloodGroup ) {
+    public void setBloodGroup(BloodGroup bloodGroup) {
         this.bloodGroup = bloodGroup;
     }
 
@@ -115,7 +115,7 @@ public class BloodDonation implements Serializable {
         return rhd;
     }
 
-    public void setRhd( RhesusFactor rhd ) {
+    public void setRhd(RhesusFactor rhd) {
         this.rhd = rhd;
     }
 
@@ -123,7 +123,7 @@ public class BloodDonation implements Serializable {
         return created;
     }
 
-    public void setCreated( Date created ) {
+    public void setCreated(Date created) {
         this.created = created;
     }
 
@@ -131,7 +131,7 @@ public class BloodDonation implements Serializable {
         return bloodBank;
     }
 
-    public void setBloodBank( BloodBank bloodBank ) {
+    public void setBloodBank(BloodBank bloodBank) {
         this.bloodBank = bloodBank;
     }
 
@@ -139,25 +139,25 @@ public class BloodDonation implements Serializable {
         return donationRecordSet;
     }
 
-    public void setDonationRecordSet( Set<DonationRecord> donationRecordSet ) {
+    public void setDonationRecordSet(Set<DonationRecord> donationRecordSet) {
         this.donationRecordSet = donationRecordSet;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += ( donationId != null ? donationId.hashCode() : 0 );
+        hash += (donationId != null ? donationId.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals( Object object ) {
+    public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if( !( object instanceof BloodDonation ) ){
+        if (!(object instanceof BloodDonation)) {
             return false;
         }
-        BloodDonation other = (BloodDonation)object;
-        if( ( this.donationId == null && other.donationId != null ) || ( this.donationId != null && !this.donationId.equals( other.donationId ) ) ){
+        BloodDonation other = (BloodDonation) object;
+        if ((this.donationId == null && other.donationId != null) || (this.donationId != null && !this.donationId.equals(other.donationId))) {
             return false;
         }
         return true;
