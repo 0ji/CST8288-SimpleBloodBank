@@ -26,7 +26,7 @@ public class PersonDAL extends GenericDAL<Person> {
         Map<String, Object> map = new HashMap();
         map.put("id", id);
         
-        return findResult("Person.findByIDe", map);
+        return findResult("Person.findById", map);
     }
     
     public List<Person> findByFirstName (String firstName) {
