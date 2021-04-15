@@ -76,6 +76,12 @@ public class Person implements Serializable {
     private Set<DonationRecord> donationRecordSet;
 
     public Person() {
+        id = 1000;
+        firstName = "Jamie";
+        lastName = "Verner";
+        phone = "1-111-1111";
+        address = "1385 Woodroffe Avenue";
+        birth = new Date();
     }
 
     public Person( Integer id ) {

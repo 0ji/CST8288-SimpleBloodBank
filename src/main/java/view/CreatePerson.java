@@ -55,7 +55,7 @@ public class CreatePerson extends HttpServlet {
             out.println( "<br>" );
                 
             out.println( "Phone Number:<br>" );
-            out.printf( "<input type=\"tel\" name=\"%s\" pattern=\"[0-9]{3}-[0-9]{2}-[0-9]{3}\"><br>", PersonLogic.PHONE );
+            out.printf( "<input type=\"tel\" name=\"%s\" placeholder=\"613-613-6131\"><br>", PersonLogic.PHONE );
             out.println( "<br>" );
                 
             out.println( "Address:<br>" );
@@ -63,7 +63,7 @@ public class CreatePerson extends HttpServlet {
             out.println( "<br>" );
                 
             out.println( "Birth Date:<br>" );
-            out.printf( "<input type=\"date\" name=\"%s\" value=\"\" min=\"1900-01-01\" max=\"2021-04-13\"><br>", PersonLogic.BIRTH );
+            out.printf( "<input type=\"text\" name=\"%s\" placeholder=\"yyyy-mm-dd hh:mm:ss\"><br>", PersonLogic.BIRTH );
             out.println( "<br>" );
                 
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
@@ -138,11 +138,13 @@ public class CreatePerson extends HttpServlet {
         String lastName = request.getParameter( PersonLogic.LAST_NAME );
         
         String fullName = firstName +" "+ lastName;
+        
         //TODO: Fix this area. Definitely a better way of doing this.
-        if( pLogic.getPersonWithFirstName( firstName ) == null && pLogic.getPersonWithLastName( lastName ) == null ) {
+        if( pLogic.getPersonWithFirstName( firstName ).isEmpty()) {
             try {
                 Person person = pLogic.createEntity( request.getParameterMap() );
                 pLogic.add( person );
+                errorMessage = null;
             } catch( Exception ex ) {
                 errorMessage = ex.getMessage();
             }

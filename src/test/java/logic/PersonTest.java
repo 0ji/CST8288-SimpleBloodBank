@@ -2,7 +2,6 @@ package logic;
 
 import common.EMFactory;
 import common.TomcatStartUp;
-import entity.Account;
 import entity.Person;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -183,7 +182,7 @@ public class PersonTest {
             assertEquals( sampleMap.get( PersonLogic.LAST_NAME )[ 0 ], person.getLastName() );
             assertEquals( sampleMap.get( PersonLogic.PHONE )[ 0 ], person.getPhone() );
             assertEquals( sampleMap.get( PersonLogic.ADDRESS )[ 0 ], person.getAddress() );
-            assertEquals( sampleMap.get( PersonLogic.BIRTH )[ 0 ], person.getBirth() );
+            assertEquals( sampleMap.get( PersonLogic.BIRTH )[ 0 ], logic.convertDateToString(person.getBirth()));
             
             logic.delete( person );
         });
@@ -197,7 +196,7 @@ public class PersonTest {
         sampleMap.put( PersonLogic.LAST_NAME, new String[]{ expectedEntity.getLastName() } );
         sampleMap.put( PersonLogic.PHONE, new String[]{ expectedEntity.getPhone() } );
         sampleMap.put( PersonLogic.ADDRESS, new String[]{ expectedEntity.getAddress() } );
-        sampleMap.put( PersonLogic.BIRTH, new String[]{ expectedEntity.getBirth().toString() } );
+        sampleMap.put( PersonLogic.BIRTH, new String[]{ logic.convertDateToString(expectedEntity.getBirth()) } );
 
         Person person = logic.createEntity( sampleMap );
 
@@ -214,7 +213,7 @@ public class PersonTest {
             map.put( PersonLogic.LAST_NAME, new String[]{ expectedEntity.getLastName() } );
             map.put( PersonLogic.PHONE, new String[]{ expectedEntity.getPhone() } );
             map.put( PersonLogic.ADDRESS, new String[]{ expectedEntity.getAddress() } );
-            map.put( PersonLogic.BIRTH, new String[]{ expectedEntity.getBirth().toString() } );
+            map.put( PersonLogic.BIRTH, new String[]{ logic.convertDateToString(expectedEntity.getBirth()) } );
         };
 
         //idealy every test should be in its own method
@@ -270,6 +269,7 @@ public class PersonTest {
         sampleMap.put( PersonLogic.LAST_NAME, new String[]{ generateString.apply( 1 ) } );
         sampleMap.put( PersonLogic.PHONE, new String[]{ generateString.apply( 1 ) } );
         sampleMap.put( PersonLogic.ADDRESS, new String[]{ generateString.apply( 1 ) } );
+        sampleMap.put( PersonLogic.BIRTH, new String[]{ "2005-11-25 18:30:00" } );
 
         //idealy every test should be in its own method
         Person person = logic.createEntity( sampleMap );
@@ -278,6 +278,7 @@ public class PersonTest {
         assertEquals( sampleMap.get( PersonLogic.LAST_NAME )[ 0 ], person.getLastName() );
         assertEquals( sampleMap.get( PersonLogic.PHONE )[ 0 ], person.getPhone() );
         assertEquals( sampleMap.get( PersonLogic.ADDRESS )[ 0 ], person.getAddress() );
+        assertEquals( sampleMap.get( PersonLogic.BIRTH )[ 0 ], logic.convertDateToString(person.getBirth()));
 
         sampleMap = new HashMap<>();
         sampleMap.put( PersonLogic.ID, new String[]{ Integer.toString( 1 ) } );
@@ -285,6 +286,7 @@ public class PersonTest {
         sampleMap.put( PersonLogic.LAST_NAME, new String[]{ generateString.apply( 50 ) } );
         sampleMap.put( PersonLogic.PHONE, new String[]{ generateString.apply( 15 ) } );
         sampleMap.put( PersonLogic.ADDRESS, new String[]{ generateString.apply( 100 ) } );
+        sampleMap.put( PersonLogic.BIRTH, new String[]{ "2005-11-25 18:30:00" } );
 
         //idealy every test should be in its own method
         person = logic.createEntity( sampleMap );
@@ -293,6 +295,7 @@ public class PersonTest {
         assertEquals( sampleMap.get( PersonLogic.LAST_NAME )[ 0 ], person.getLastName() );
         assertEquals( sampleMap.get( PersonLogic.PHONE )[ 0 ], person.getPhone() );
         assertEquals( sampleMap.get( PersonLogic.ADDRESS )[ 0 ], person.getAddress() );
+        assertEquals( sampleMap.get( PersonLogic.BIRTH )[ 0 ], logic.convertDateToString(person.getBirth()));
     }
     
     @Test
