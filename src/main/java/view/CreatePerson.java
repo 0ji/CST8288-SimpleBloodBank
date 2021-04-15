@@ -139,7 +139,6 @@ public class CreatePerson extends HttpServlet {
         
         String fullName = firstName +" "+ lastName;
         
-        //TODO: Fix this area. Definitely a better way of doing this.
         if( pLogic.getPersonWithFirstName( firstName ).isEmpty()) {
             try {
                 Person person = pLogic.createEntity( request.getParameterMap() );

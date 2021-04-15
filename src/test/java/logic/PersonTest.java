@@ -54,9 +54,10 @@ public class PersonTest {
 
         //get an instance of EntityManager
         EntityManager em = EMFactory.getEMF().createEntityManager();
+
         //start a Transaction
         em.getTransaction().begin();
-
+        
         Person entity = new Person();
         entity.setFirstName( "Jamie" );
         entity.setLastName( "Verner" );
