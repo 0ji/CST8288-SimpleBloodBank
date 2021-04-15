@@ -3,12 +3,16 @@ package logic;
 import common.ValidationException;
 import dal.PersonDAL;
 import entity.Person;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.ObjIntConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -84,8 +88,11 @@ public class PersonLogic extends GenericLogic<Person, PersonDAL> {
                 throw new ValidationException( error );
             }
         };
+        String birthDate = parameterMap.get(BIRTH)[0];
+        String newBirthDate = birthDate.replace("T", " ");
+        newBirthDate = newBirthDate.concat(":00");
         
-        Date birth = convertStringToDate(parameterMap.get(BIRTH)[0]);
+        Date birth = convertStringToDate(newBirthDate);
         String firstName = parameterMap.get(FIRST_NAME)[0];
         String lastName = parameterMap.get(LAST_NAME)[0];
         String phone = parameterMap.get(PHONE)[0];
