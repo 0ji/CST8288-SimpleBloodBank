@@ -7,9 +7,17 @@
         <servlet-name>DonationRecord</servlet-name>
         <servlet-class>view.CreateDonationRecord</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DonationRecordView</servlet-name>
+        <servlet-class>view.DonationRecordView</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DonationRecord</servlet-name>
         <url-pattern>/DonationRecord</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DonationRecordView</servlet-name>
+        <url-pattern>/DonationRecordView</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

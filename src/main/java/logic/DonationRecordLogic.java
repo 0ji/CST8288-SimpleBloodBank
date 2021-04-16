@@ -1,14 +1,23 @@
 package logic;
 
+import common.EMFactory;
 import common.ValidationException;
 import dal.DonationRecordDAL;
+import entity.BloodBank;
+import entity.BloodDonation;
 import entity.DonationRecord;
+import entity.Person;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.ObjIntConsumer;
+import javax.persistence.EntityManager;
+import static logic.BloodDonationLogic.BANK_ID;
+import static logic.BloodDonationLogic.CREATED;
 
 /**
  *
@@ -36,7 +45,7 @@ public class DonationRecordLogic extends GenericLogic<DonationRecord, DonationRe
 
     @Override
     public DonationRecord getWithId(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return get(() -> dal().findById(id));
     }
 
     public List<DonationRecord> getDonationRecordWithTested(boolean tested) {
@@ -75,14 +84,13 @@ public class DonationRecordLogic extends GenericLogic<DonationRecord, DonationRe
 //        }
 
         //create a new Entity object
-        DonationRecord donationRecord = new DonationRecord();  //NEVER CREATE ANY OTHER TYPE OF ENTTIY. ONLY ACCOUNT ENTITY HERE
+        DonationRecord donationRecordEntity = new DonationRecord();  //NEVER CREATE ANY OTHER TYPE OF ENTTIY. ONLY ACCOUNT ENTITY HERE
         //ID is generated, so if it exists add it to the entity object
         //otherwise it does not matter as mysql will create an if for it.
-/**
- * //the only time that we will have id is for update behaviour.
+         //the only time that we will have id is for update behaviour.
         if( parameterMap.containsKey( ID ) ){
             try {
-                donationRecord.setId( Integer.parseInt( parameterMap.get( ID )[ 0 ] ) );
+                donationRecordEntity.setId( Integer.parseInt( parameterMap.get( ID )[ 0 ] ) );
             } catch( java.lang.NumberFormatException ex ) {
                 throw new ValidationException( ex );
             }
@@ -109,28 +117,88 @@ public class DonationRecordLogic extends GenericLogic<DonationRecord, DonationRe
         //converted to appropriate type. have in mind that values are
         //stored in an array of String; almost always the value is at
         //index zero unless you have used duplicated key/name somewhere.
-        String displayname = null;
-        if( parameterMap.containsKey( NAME ) ){
-            displayname = parameterMap.get( NICKNAME )[ 0 ];
-            validator.accept( displayname, 45 );
+        if (parameterMap.containsKey(PERSON_ID)) {
+            try{    
+              
+                EntityManager entityManager = EMFactory.getEMF().createEntityManager();
+                Integer personID = Integer.parseInt(parameterMap.get(BANK_ID)[0]);
+                Person personEntity = entityManager.find(Person.class, personID);
+                donationRecordEntity.setPerson(personEntity);
+             
+            } catch (java.lang.NumberFormatException ex) {
+                throw new ValidationException(ex);
+            }
         }
-        String username = parameterMap.get( USERNAME )[ 0 ];
-        String password = parameterMap.get( PASSWORD )[ 0 ];
-        String name = parameterMap.get( NAME )[ 0 ];
-
-        //validate the data
-        validator.accept( username, 45 );
-        validator.accept( password, 45 );
-        validator.accept( name, 45 );
-
-        //set values on entity
-        donationRecord.setDisplayname( displayname );
-        donationRecord.setUsername( username );
-        donationRecord.setPassword( password );
-        donationRecord.setName( name );
-*/
-        return donationRecord;
+        
+        if (parameterMap.containsKey(DONATION_ID)) {
+            try{    
+              
+                EntityManager entityManager = EMFactory.getEMF().createEntityManager();
+                Integer bloodDonationID = Integer.parseInt(parameterMap.get(DONATION_ID)[0]);
+                BloodDonation bloodDonationEntity = entityManager.find(BloodDonation.class, bloodDonationID);
+                donationRecordEntity.setBloodDonation(bloodDonationEntity);
+             
+            } catch (java.lang.NumberFormatException ex) {
+                throw new ValidationException(ex);
+            }
+        }
+        Boolean tested;
+         if( parameterMap.containsKey( TESTED ) ){
+            try {
+                 tested = Boolean.parseBoolean(parameterMap.get( TESTED )[ 0 ]);
+                 donationRecordEntity.setTested(tested );
+            } catch (IllegalArgumentException e){
+                throw new ValidationException(e);
+            }
+           
+        }
+        
+        String administrator = null;
+        if( parameterMap.containsKey( ADMINISTRATOR ) ){
+            try {
+                 administrator = parameterMap.get( ADMINISTRATOR )[ 0 ];
+                 validator.accept( administrator, 100 );
+                 donationRecordEntity.setAdministrator( administrator );
+            } catch (Exception e){
+                throw new ValidationException(e);
+            }
+           
+        }
+        String hospital = null;
+        if( parameterMap.containsKey( HOSPITAL ) ){
+            try {
+                 administrator = parameterMap.get( HOSPITAL )[ 0 ];
+                 validator.accept( hospital, 100 );
+                 donationRecordEntity.setHospital(hospital );
+            } catch (Exception e){
+                throw new ValidationException(e);
+            }
+           
+        }
+        if (parameterMap.containsKey(CREATED)) {
+            try {
+                Date date = convertStringToDate(parameterMap.get(CREATED)[0]);
+                donationRecordEntity.setCreated(date);
+            } catch (Exception e) {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+                Date currentDate = new Date(System.currentTimeMillis());
+                String formattedDate = (formatter.format(currentDate));
+                Date convertedFormattedDate = convertStringToDate(formattedDate);
+                donationRecordEntity.setCreated(convertedFormattedDate);
+                //throw new ValidationException(e);
+            }
+        }else{
+          donationRecordEntity.setCreated(Calendar.getInstance().getTime());
+       }
+                       
+        return donationRecordEntity;
     }
+    
+    /**
+     * 
+        
+     */
+    
     /**
      * method lists the Donation Record table column names in 
      * @return a list of column names in Donation Record table. 

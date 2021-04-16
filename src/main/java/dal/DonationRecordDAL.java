@@ -47,9 +47,9 @@ public class DonationRecordDAL extends GenericDAL<DonationRecord> {
         return findResults( "DonationRecord.findByAdministrator", map );
     }
 
-    public List<DonationRecord> findByHospital( String username ) {
+    public List<DonationRecord> findByHospital( String hospital ) {
         Map<String, Object> map = new HashMap<>();
-        map.put( "username", username );
+        map.put( "hospital", hospital );
         return findResults( "DonationRecord.findByHospital", map );
     }
 
