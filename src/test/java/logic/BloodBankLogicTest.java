@@ -36,7 +36,7 @@ public class BloodBankLogicTest {
     @BeforeEach
     public void setUp() {
         
-        logic = LogicFactory.getFor( "Account" );
+        logic = LogicFactory.getFor("BloodBank");
         /* **********************************
          * ***********IMPORTANT**************
          * **********************************/
@@ -79,24 +79,24 @@ public class BloodBankLogicTest {
 
     @Test
     final void testGetAll() {
-        //get all the accounts from the DB
+        //get all the bloodbanks from the DB
         List<BloodBank> list = logic.getAll();
         //store the size of list, this way we know how many accounts exits in DB
         int originalSize = list.size();
 
-        //make sure account was created successfully
+        //make sure bloodbank was created successfully
         assertNotNull( expectedEntity );
-        //delete the new account
+        //delete the new bloodbank
         logic.delete( expectedEntity );
 
-        //get all accounts again
+        //get all bloodbanks again
         list = logic.getAll();
-        //the new size of accounts must be one less
+        //the new size of bloodbanks must be one less
         assertEquals( originalSize - 1, list.size() );
     }
     
     /**
-     * helper method for testing all account fields
+     * helper method for testing all bloodbank fields
      *
      * @param expected
      * @param actual
@@ -109,4 +109,5 @@ public class BloodBankLogicTest {
         assertEquals( expected.getPrivatelyOwned(), actual.getPrivatelyOwned() );
         assertEquals( expected.getEstablished(), actual.getEstablished() );
     }
+    
 }
