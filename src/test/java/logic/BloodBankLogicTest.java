@@ -96,10 +96,6 @@ public class BloodBankLogicTest {
         if( expectedEntity != null ){
             logic.delete( expectedEntity );
         }
-        
-        if( expectedEntity != null ){
-            logic.delete( expectedEntity );
-        }
     }
 
     
