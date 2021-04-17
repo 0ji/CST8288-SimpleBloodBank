@@ -4,6 +4,7 @@ import common.EMFactory;
 import entity.BloodBank;
 import entity.BloodDonation;
 import entity.BloodGroup;
+import entity.Person;
 import entity.RhesusFactor;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.BloodDonationLogic;
 import logic.LogicFactory;
+import logic.PersonLogic;
 
 /**
  *
@@ -46,18 +48,37 @@ private String errorMessage = null;
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Donate Blood Form</title>");
+            out.println("<link rel=\"stylesheet\" href=\"bloodform.css\">");
             out.println("</head>");
-            out.println("<style>");
-            out.println("#donateBlood{padding: 10px;\n" +
-            "line-height: 20px;\n}");
-            out.println("</style>");
-            out.println("<body>");
-            out.println("<div style=\"text-align:center;\">");
-            out.println("<div style=\"display:in-line block; text-align: left;\">");
             out.println("<br>");
+            //Person Section Addition.
+            out.println("<div class=\"grid-container\">");
+            out.println("<h2>Person</h2>");
+            out.println("<form method=\"post\">");
+            out.println("<div class=\"grid-item\">First Name:</div>");
+            out.println("<div class=\"grid-item\">");
+            out.printf("<input type=\"text\" id=\"fname\" name=\"%s\" value=\"\">", PersonLogic.FIRST_NAME);
+            out.println("</div>");
+            out.println("<div class=\"grid-item\">Last Name:</div>");
+            out.println("<div class=\"grid-item\">");
+            out.printf("<input type=\"text\" id=\"lname\" name=\"%s\" value=\"\">", PersonLogic.LAST_NAME);
+            out.println("</div>");
+            out.println("<div class=\"grid-item\">Phone:</div>");
+            out.println("<div class=\"grid-item\">");
+            out.printf("<input type=\"tel\" id=\"phone\" name=\"%s\" placeholder=\"613-613-6131\" pattern=\"[0-9]{3}-[0-9]{3}-[0-9]{4}\">", PersonLogic.PHONE);
+            out.println("</div>");
+            out.println("<div class=\"grid-item\">Address:</div>");
+            out.println("<div class=\"grid-item\">");
+            out.printf("<input type=\"text\" id=\"address\" name=\"%s\" value=\"\">", PersonLogic.ADDRESS);
+            out.println("</div>");
+            out.println("<div class=\"grid-item\">Date of Birth:</div>");
+            out.println("<div class=\"grid-item\">");
+            out.printf("<input type=\"datetime-local\" id=\"dob\" name=\"%s\" value=\"\"><br>", PersonLogic.BIRTH);
+            out.println("</div>");
+            out.println("</div>");
+            
             out.println("<h2>Blood</h2>");
             //out.println("<div id=donateBlood");
-            out.println("<form method=\"post\">");
             out.println("Milliliters:<br>");
             out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", BloodDonationLogic.MILLILITERS);
             out.println("<br>");
@@ -137,6 +158,27 @@ private String errorMessage = null;
             throws ServletException, IOException {
         
         log("POST");
+        //PersonLogic Test in POST.
+        PersonLogic pLogic = LogicFactory.getFor( "Person" );
+        
+        String firstName = request.getParameter( PersonLogic.FIRST_NAME );
+        String lastName = request.getParameter( PersonLogic.LAST_NAME );
+        
+        String fullName = firstName +" "+ lastName;
+        
+        if( pLogic.getPersonWithFirstName( firstName ).isEmpty()) {
+            try {
+                Person person = pLogic.createEntity( request.getParameterMap() );
+                pLogic.add( person );
+                errorMessage = null;
+            } catch( Exception ex ) {
+                errorMessage = ex.getMessage();
+            }
+        } else {
+            //if duplicate print the error message
+            errorMessage = "Name: \"" + fullName + "\" already exists";
+        }
+        
         EntityManager em = EMFactory.getEMF().createEntityManager();
         Integer bbInt= Integer.parseInt(request.getParameter(BloodDonationLogic.BANK_ID));
         BloodBank bb = em.find(BloodBank.class,bbInt );
