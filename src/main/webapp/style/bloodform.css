@@ -14,7 +14,7 @@ div > input{
     padding: 0px;
 }
 
-.item:nth-child(1) {
+.grid-item:nth-child(1) {
     grid-column-start: 1;
     grid-column-end: 5;
 }
