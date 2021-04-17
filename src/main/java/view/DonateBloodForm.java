@@ -51,6 +51,7 @@ private String errorMessage = null;
             out.println("<link rel=\"stylesheet\" href=\"bloodform.css\">");
             out.println("</head>");
             out.println("<br>");
+            
             //Person Section Addition.
             out.println("<div class=\"grid-container\">");
             out.println("<h2>Person</h2>");
