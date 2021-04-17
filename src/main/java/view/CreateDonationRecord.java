@@ -152,7 +152,7 @@ public class CreateDonationRecord extends HttpServlet {
         } else {
             try {
               
-                DonationRecordLogic logic = LogicFactory.getFor("BloodDonation");
+                DonationRecordLogic logic = LogicFactory.getFor("DonationRecord");
                 DonationRecord donationRecord = logic.createEntity(request.getParameterMap());
                 logic.add(donationRecord);
 
@@ -164,7 +164,7 @@ public class CreateDonationRecord extends HttpServlet {
         if (request.getParameter("add") != null) {
             processRequest(request, response);
         } else if (request.getParameter("view") != null) {
-            response.sendRedirect("BloodDonationTable");
+            response.sendRedirect("DonationRecordTable");
         }
     }
 
