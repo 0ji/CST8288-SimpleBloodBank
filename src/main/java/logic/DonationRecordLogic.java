@@ -215,7 +215,12 @@ public class DonationRecordLogic extends GenericLogic<DonationRecord, DonationRe
 
     @Override
     public List<?> extractDataAsList(DonationRecord e) {
-        return Arrays.asList(e.getId(), e.getPerson(), e.getBloodDonation(), e.getTested(), e.getAdministrator(), e.getHospital(), e.getCreated());
+        String bloodDonation = null;
+        
+        if (e.getBloodDonation() != null) {
+            bloodDonation = e.getBloodDonation().getId().toString();
+        }
+        return Arrays.asList(e.getId(), e.getPerson(), bloodDonation, e.getTested(), e.getAdministrator(), e.getHospital(), e.getCreated());
     }    
 }
     
