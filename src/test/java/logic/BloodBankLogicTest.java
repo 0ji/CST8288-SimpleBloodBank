@@ -28,6 +28,7 @@ public class BloodBankLogicTest {
     
     private BloodBankLogic logic;
     private BloodBank expectedEntity;
+    private Person expectedPerson;
     SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
     
     @BeforeAll
@@ -54,23 +55,25 @@ public class BloodBankLogicTest {
         //get an instance of EntityManager
         EntityManager em = EMFactory.getEMF().createEntityManager();
         //start a Transaction
-        BloodBank entity = new BloodBank();
         
-        Person person = em.find(Person.class, 1);
-        if (person == null) {
-            person = new Person();
-            person.setFirstName("Test");
-            person.setLastName("Tester");
-            person.setPhone("1234567890");
-            person.setAddress("123 Test St.");
-            person.setBirth(logic.convertStringToDate("1990-02-21 18:30:00") );
+        // for some reason this returns null :( which creates a lot of person classes (13 for 13 tests each)
+        Person pp = em.find(Person.class, 1);
+        if (pp == null) {
+            pp = new Person();
+            pp.setFirstName("Test");
+            pp.setLastName("Tester");
+            pp.setPhone("1122334455");
+            pp.setAddress("123 Test St.");
+            pp.setBirth(logic.convertStringToDate("1990-02-21 18:30:00") );
             
             em.getTransaction().begin();
-            em.persist(person);
+            em.persist(pp);
             em.getTransaction().commit();
         }
+
+        // create new bloodbank entity
+        BloodBank entity = new BloodBank();
         
-        em.getTransaction().begin();
         Date date = new Date();
         String formattedDate = (FORMATTER.format(date));
         entity.setEstablished(logic.convertStringToDate(formattedDate));
@@ -78,10 +81,10 @@ public class BloodBankLogicTest {
         entity.setName( "Junit 5 Test" );
         entity.setPrivatelyOwned(true);
         entity.setEmplyeeCount(12345);
+        // set person dependency (if applicable)
+        entity.setOwner(pp);
         
-        
-        entity.setOwner(person);
-        
+        em.getTransaction().begin();
         //add a bloodbank to hibernate, bloodbank is now managed.
         //we use merge instead of add so we can get the updated generated ID.
         expectedEntity = em.merge( entity );
