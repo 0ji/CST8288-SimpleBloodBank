@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.BloodDonationLogic;
+import logic.DonationRecordLogic;
 import logic.LogicFactory;
 import logic.PersonLogic;
 
@@ -98,6 +99,38 @@ private String errorMessage = null;
             out.printf("<option value=\"%s\">Positive</option>", RhesusFactor.Positive);
             out.printf("<option value=\"%s\">Negative</option>", RhesusFactor.Negative);
             out.println("</select><br><br>");
+            
+            
+            out.println("<h2>Donation Record</h2>");
+            out.println("Person ID:<br>");
+            out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.PERSON_ID);
+            out.println("<br>");
+            
+            out.println("Donation ID:<br>");
+            out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.DONATION_ID);
+            out.println("<br>");
+                   
+            out.println("Tested:<br>");
+            out.printf( "<input type=\"radio\" name=\"%s\" value=\"false\" checked> No ", DonationRecordLogic.TESTED );
+            out.printf( "<input type=\"radio\" name=\"%s\" value=\"true\"> Yes<br>", DonationRecordLogic.TESTED );
+            out.println( "<br>" );
+            
+            out.println("Administrator:<br>");
+            out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.ADMINISTRATOR);
+            out.println("<br>");
+            
+            out.println("Hospital:<br>");
+            out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.HOSPITAL);
+            out.println("<br>");
+            
+            out.println("Created:<br>");
+            out.printf( "<input type=\"datetime-local\" name=\"%s\"><br>", DonationRecordLogic.CREATED );
+            out.println("<br>");
+            
+            out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
+            out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
+            
+            
             //out.println("</div>");
             out.println("<input type=\"submit\" name=\"view\" value=\"Add and View\">");
             out.println("<input type=\"submit\" name=\"add\" value=\"Add\">");

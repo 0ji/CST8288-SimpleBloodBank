@@ -61,8 +61,9 @@ public class CreateDonationRecord extends HttpServlet {
             out.println("<br>");
                    
             out.println("Tested:<br>");
-            out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.TESTED);
-            out.println("<br>");
+            out.printf( "<input type=\"radio\" name=\"%s\" value=\"false\" checked> No ", DonationRecordLogic.TESTED );
+            out.printf( "<input type=\"radio\" name=\"%s\" value=\"true\"> Yes<br>", DonationRecordLogic.TESTED );
+            out.println( "<br>" );
             
             out.println("Administrator:<br>");
             out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.ADMINISTRATOR);
