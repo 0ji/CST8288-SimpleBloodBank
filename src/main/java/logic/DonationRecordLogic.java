@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.ObjIntConsumer;
 import javax.persistence.EntityManager;
-import static logic.BloodDonationLogic.BANK_ID;
-import static logic.BloodDonationLogic.CREATED;
 
 /**
  *
@@ -121,7 +119,7 @@ public class DonationRecordLogic extends GenericLogic<DonationRecord, DonationRe
             try{    
               
                 EntityManager entityManager = EMFactory.getEMF().createEntityManager();
-                Integer personID = Integer.parseInt(parameterMap.get(BANK_ID)[0]);
+                Integer personID = Integer.parseInt(parameterMap.get(PERSON_ID)[0]);
                 Person personEntity = entityManager.find(Person.class, personID);
                 donationRecordEntity.setPerson(personEntity);
              

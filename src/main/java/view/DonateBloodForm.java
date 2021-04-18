@@ -129,11 +129,6 @@ private String errorMessage = null;
             
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
             out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
-            
-            
-            //out.println("</div>");
-            out.println("<input type=\"submit\" name=\"view\" value=\"Add and View\">");
-            out.println("<input type=\"submit\" name=\"add\" value=\"Add\">");
             out.println("</form>");
             
             if (errorMessage != null && !errorMessage.isEmpty()) {

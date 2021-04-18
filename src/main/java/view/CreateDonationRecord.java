@@ -16,9 +16,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import logic.BloodDonationLogic;
 import logic.DonationRecordLogic;
 import logic.LogicFactory;
+import logic.BloodDonationLogic;
 import logic.PersonLogic;
 
 /**
@@ -42,7 +42,6 @@ public class CreateDonationRecord extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -148,10 +147,10 @@ public class CreateDonationRecord extends HttpServlet {
                 
      // check if dependency blood bank entity exists. if not, generate error message
              
-        if (donationEntity == null) {
-            errorMessage = " BloodDonation : \"" + DonationRecordLogic.DONATION_ID + "\" does not exist";
-        } else if (personEntity == null) {
+        if (personEntity == null) {
             errorMessage = "Person : \"" + DonationRecordLogic.PERSON_ID + "\" does not exists";
+        } else if (donationEntity == null) {
+            errorMessage = " BloodDonation : \"" + DonationRecordLogic.DONATION_ID + "\" does not exist";
         } else {
             try {
               
@@ -165,8 +164,10 @@ public class CreateDonationRecord extends HttpServlet {
         }
 
         if (request.getParameter("add") != null) {
+        log("ADD");
             processRequest(request, response);
         } else if (request.getParameter("view") != null) {
+        log("VIEW");
             response.sendRedirect("DonationRecordTable");
         }
     }
