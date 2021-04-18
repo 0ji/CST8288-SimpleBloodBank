@@ -10,6 +10,7 @@ import entity.RhesusFactor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +20,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import logic.BloodBankLogic;
 import logic.BloodDonationLogic;
 import logic.DonationRecordLogic;
 import logic.LogicFactory;
@@ -30,7 +32,8 @@ import logic.PersonLogic;
  */
 @WebServlet(name = "DonateBloodForm", urlPatterns = {"/DonateBloodFrom"})
 public class DonateBloodForm extends HttpServlet {
-private String errorMessage = null;
+
+    private String errorMessage = null;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -53,7 +56,7 @@ private String errorMessage = null;
             out.println("<link rel=\"stylesheet\" href=\"bloodform.css\">");
             out.println("</head>");
             out.println("<br>");
-            
+
             //Person Section Addition.
             out.println("<div class=\"grid-container\">");
             out.println("<h2>Person</h2>");
@@ -79,14 +82,21 @@ private String errorMessage = null;
             out.printf("<input type=\"datetime-local\" id=\"dob\" name=\"%s\" value=\"\"><br>", PersonLogic.BIRTH);
             out.println("</div>");
             out.println("</div>");
-            
+
             out.println("<h2>Blood</h2>");
             //out.println("<div id=donateBlood");
             out.println("Milliliters:<br>");
             out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", BloodDonationLogic.MILLILITERS);
             out.println("<br>");
-            out.println("Blood Bank ID:<br>");
-            out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", BloodDonationLogic.BANK_ID);
+            out.println("Blood Bank:<br>");
+            //out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", BloodDonationLogic.BANK_ID);
+            out.printf("<select name=\"%s\">", BloodDonationLogic.BANK_ID);
+            BloodBankLogic bbLogic = LogicFactory.getFor("BloodBank");
+            List<BloodBank> bbList = bbLogic.getAll();
+            for (BloodBank bloodbank: bbList) {
+                out.printf("<option value=\"%s\">%s</option>", bloodbank.getId(), bloodbank.getName());
+            }
+            out.println("</select><br>");
             out.println("<br>");
             out.println("Blood Group: <br>");;
             out.printf("<select name=\"%s\">", BloodDonationLogic.BLOOD_GROUP);
@@ -100,30 +110,29 @@ private String errorMessage = null;
             out.printf("<option value=\"%s\">Positive</option>", RhesusFactor.Positive);
             out.printf("<option value=\"%s\">Negative</option>", RhesusFactor.Negative);
             out.println("</select><br><br>");
-            
-            
+
             out.println("<h2>Donation Record</h2>");
-                   
+
             out.println("Tested:<br>");
-            out.printf( "<input type=\"radio\" name=\"%s\" value=\"false\" checked> No ", DonationRecordLogic.TESTED );
-            out.printf( "<input type=\"radio\" name=\"%s\" value=\"true\"> Yes<br>", DonationRecordLogic.TESTED );
-            out.println( "<br>" );
-            
+            out.printf("<input type=\"radio\" name=\"%s\" value=\"false\" checked> No ", DonationRecordLogic.TESTED);
+            out.printf("<input type=\"radio\" name=\"%s\" value=\"true\"> Yes<br>", DonationRecordLogic.TESTED);
+            out.println("<br>");
+
             out.println("Administrator:<br>");
             out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.ADMINISTRATOR);
             out.println("<br>");
-            
+
             out.println("Hospital:<br>");
             out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.HOSPITAL);
             out.println("<br>");
-            
+
             out.println("Created:<br>");
-            out.printf( "<input type=\"datetime-local\" name=\"%s\"><br>", DonationRecordLogic.CREATED );
+            out.printf("<input type=\"datetime-local\" name=\"%s\"><br>", DonationRecordLogic.CREATED);
             out.println("<br>");
-            
-            out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
+
+            out.println("<input type=\"submit\" name=\"add\" value=\"Add\">");
             out.println("</form>");
-            
+
             if (errorMessage != null && !errorMessage.isEmpty()) {
                 out.println("<p color=red>");
                 out.println("<font color=red size=4px>");
@@ -178,42 +187,43 @@ private String errorMessage = null;
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         log("POST");
         //PersonLogic Test in POST.
-        PersonLogic pLogic = LogicFactory.getFor( "Person" );
-        
-        String firstName = request.getParameter( PersonLogic.FIRST_NAME );
-        String lastName = request.getParameter( PersonLogic.LAST_NAME );
-        
-        String fullName = firstName +" "+ lastName;
-        
-                Person person;
-                person = pLogic.createEntity( request.getParameterMap() );
-        
-        if( pLogic.getPersonWithFirstName( firstName ).isEmpty()) {
+        PersonLogic pLogic = LogicFactory.getFor("Person");
+
+        String firstName = request.getParameter(PersonLogic.FIRST_NAME);
+        String lastName = request.getParameter(PersonLogic.LAST_NAME);
+
+        String fullName = firstName + " " + lastName;
+
+        Person person;
+        person = pLogic.createEntity(request.getParameterMap());
+
+        if (pLogic.getPersonWithFirstName(firstName).isEmpty()) {
             try {
-                pLogic.add( person );
+                pLogic.add(person);
                 errorMessage = null;
-            } catch( Exception ex ) {
+            } catch (Exception ex) {
                 errorMessage = ex.getMessage();
             }
         } else {
             //if duplicate print the error message
             errorMessage = "Name: \"" + fullName + "\" already exists";
         }
-        
+
         EntityManager bankEM = EMFactory.getEMF().createEntityManager();
-        Integer bbInt= Integer.parseInt(request.getParameter(BloodDonationLogic.BANK_ID));
-        BloodBank bb = bankEM.find(BloodBank.class,bbInt );
+        Integer bbInt = Integer.parseInt(request.getParameter(BloodDonationLogic.BANK_ID));
+        BloodBank bb = bankEM.find(BloodBank.class, bbInt);
         BloodDonationLogic bdLogic = LogicFactory.getFor("BloodDonation");
-  /**
-   * check if dependency blood bank entity exists. if not, generate error message
-   */   
-  
-                BloodDonation bloodDonation;
-                bloodDonation = bdLogic.createEntity(request.getParameterMap());
-                
+        /**
+         * check if dependency blood bank entity exists. if not, generate error
+         * message
+         */
+
+        BloodDonation bloodDonation;
+        bloodDonation = bdLogic.createEntity(request.getParameterMap());
+
         if (bb == null) {
             errorMessage = "BloodBank: \"" + BloodDonationLogic.BANK_ID + "\" does not exists";
         } else {
@@ -225,30 +235,31 @@ private String errorMessage = null;
                 Logger.getLogger(CreateBloodDonation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-       
+
         DonationRecordLogic drLogic = LogicFactory.getFor("DonationRecord");
         DonationRecord donationRecord = drLogic.createEntity(request.getParameterMap());
-        
-            try {
-                donationRecord.setBloodDonation(bloodDonation);
-                donationRecord.setPerson(person);
-                drLogic.add(donationRecord);
 
-            } catch (Exception ex) {
-                Logger.getLogger(CreateDonationRecord.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            donationRecord.setBloodDonation(bloodDonation);
+            donationRecord.setPerson(person);
+            drLogic.add(donationRecord);
+
+        } catch (Exception ex) {
+            Logger.getLogger(CreateDonationRecord.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         if (request.getParameter("add") != null) {
             processRequest(request, response);
-           
+
+        }
     }
-    }
+
     /**
      * Returns a short description of the servlet.
      *
      * @return a String containing servlet description
      */
-     @Override
+    @Override
     public String getServletInfo() {
         return "Create a Blood Donation Entity";
     }
