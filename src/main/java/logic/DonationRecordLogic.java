@@ -165,7 +165,7 @@ public class DonationRecordLogic extends GenericLogic<DonationRecord, DonationRe
         String hospital = null;
         if( parameterMap.containsKey( HOSPITAL ) ){
             try {
-                 administrator = parameterMap.get( HOSPITAL )[ 0 ];
+                 hospital = parameterMap.get( HOSPITAL )[ 0 ];
                  validator.accept( hospital, 100 );
                  donationRecordEntity.setHospital(hospital );
             } catch (Exception e){

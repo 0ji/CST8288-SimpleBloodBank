@@ -4,6 +4,7 @@ import common.EMFactory;
 import entity.BloodBank;
 import entity.BloodDonation;
 import entity.BloodGroup;
+import entity.DonationRecord;
 import entity.Person;
 import entity.RhesusFactor;
 import java.io.IOException;
@@ -102,13 +103,6 @@ private String errorMessage = null;
             
             
             out.println("<h2>Donation Record</h2>");
-            out.println("Person ID:<br>");
-            out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.PERSON_ID);
-            out.println("<br>");
-            
-            out.println("Donation ID:<br>");
-            out.printf("<input type=\"text\" name=\"%s\" value=\"\"><br>", DonationRecordLogic.DONATION_ID);
-            out.println("<br>");
                    
             out.println("Tested:<br>");
             out.printf( "<input type=\"radio\" name=\"%s\" value=\"false\" checked> No ", DonationRecordLogic.TESTED );
@@ -193,10 +187,11 @@ private String errorMessage = null;
         String lastName = request.getParameter( PersonLogic.LAST_NAME );
         
         String fullName = firstName +" "+ lastName;
+        Person person;
         
         if( pLogic.getPersonWithFirstName( firstName ).isEmpty()) {
             try {
-                Person person = pLogic.createEntity( request.getParameterMap() );
+                person = pLogic.createEntity( request.getParameterMap() );
                 pLogic.add( person );
                 errorMessage = null;
             } catch( Exception ex ) {
@@ -210,7 +205,8 @@ private String errorMessage = null;
         EntityManager em = EMFactory.getEMF().createEntityManager();
         Integer bbInt= Integer.parseInt(request.getParameter(BloodDonationLogic.BANK_ID));
         BloodBank bb = em.find(BloodBank.class,bbInt );
-        
+        BloodDonationLogic bdLogic = LogicFactory.getFor("BloodDonation");
+        BloodDonation bloodDonation;
   /**
    * check if dependency blood bank entity exists. if not, generate error message
    */              
@@ -219,14 +215,30 @@ private String errorMessage = null;
         } else {
             try {
               
-                BloodDonationLogic bdLogic = LogicFactory.getFor("BloodDonation");
-                BloodDonation bloodDonation = bdLogic.createEntity(request.getParameterMap());
+                bloodDonation = bdLogic.createEntity(request.getParameterMap());
                 bdLogic.add(bloodDonation);
 
             } catch (Exception ex) {
                 Logger.getLogger(CreateBloodDonation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+       
+        //EntityManager em = EMFactory.getEMF().createEntityManager();
+        DonationRecord donationRecord;
+        person = pLogic.createEntity(request.getParameterMap());
+        bloodDonation = bdLogic.createEntity(request.getParameterMap());
+        DonationRecordLogic drLogic = LogicFactory.getFor("DonationRecord");
+        
+            try {
+                donationRecord = drLogic.createEntity(request.getParameterMap());
+                donationRecord.setBloodDonation(bloodDonation);
+                donationRecord.setPerson(person);
+                
+                drLogic.add(donationRecord);
+
+            } catch (Exception ex) {
+                Logger.getLogger(CreateDonationRecord.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
         if (request.getParameter("add") != null) {
             processRequest(request, response);
