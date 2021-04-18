@@ -7,6 +7,7 @@ import entity.Person;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -112,12 +113,29 @@ public class BloodBankLogic extends GenericLogic<BloodBank, BloodBankDAL>{
         //stored in an array of String; almost always the value is at
         //index zero unless you have used duplicated key/name somewhere.
         
-        Date established = convertStringToDate(parameterMap.get(ESTABLISHED)[0]);
+        //Date established = convertStringToDate(parameterMap.get(ESTABLISHED)[0]);
         String name = parameterMap.get(NAME)[0];
         Boolean privatelyOwned = Boolean.parseBoolean(parameterMap.get(PRIVATELY_OWNED)[0]);
         int employee_count = Integer.parseInt(parameterMap.get(EMPLOYEE_COUNT)[0]);
         
-        entity.setEstablished(established);
+        if (parameterMap.containsKey(ESTABLISHED)) {
+            try {
+                Date date = convertStringToDate(parameterMap.get(ESTABLISHED)[0]);
+                entity.setEstablished(date);
+            } catch (Exception e) {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+                Date currentDate = new Date(System.currentTimeMillis());
+                String formattedDate = (formatter.format(currentDate));
+                Date convertedFormattedDate = convertStringToDate(formattedDate);
+                entity.setEstablished(convertedFormattedDate);
+                //throw new ValidationException(e);
+            }
+        }else{
+          entity.setEstablished(Calendar.getInstance().getTime());
+       }
+       
+        //entity.setEstablished(established);
+        
         entity.setName(name);
         entity.setPrivatelyOwned(privatelyOwned);
         entity.setEmplyeeCount(employee_count);

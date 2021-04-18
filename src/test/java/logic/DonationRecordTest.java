@@ -1,5 +1,8 @@
-package entity;
+package logic;
 
+import entity.BloodDonation;
+import entity.DonationRecord;
+import entity.Person;
 import java.util.Date;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -7,11 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Disabled;
 
 /**
  *
  * @author ugsli
  */
+@Disabled
 public class DonationRecordTest {
     
     public DonationRecordTest() {
@@ -32,7 +37,7 @@ public class DonationRecordTest {
     @AfterEach
     public void tearDown() {
     }
-
+    
     /**
      * Test of getId method, of class DonationRecord.
      */

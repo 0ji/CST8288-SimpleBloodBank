@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.TestMethodOrder;
  *
  * @author Jamie
  */
+@Disabled
 @TestMethodOrder(OrderAnnotation.class)
 public class PersonTest {
     private PersonLogic logic;

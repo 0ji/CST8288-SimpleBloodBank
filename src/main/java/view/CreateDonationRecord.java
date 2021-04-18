@@ -16,8 +16,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import logic.BloodDonationLogic;
 import logic.DonationRecordLogic;
 import logic.LogicFactory;
+import logic.PersonLogic;
 
 /**
  *
@@ -135,18 +137,19 @@ public class CreateDonationRecord extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         log("POST");
+        
         EntityManager em = EMFactory.getEMF().createEntityManager();
+        
         Integer personInt= Integer.parseInt(request.getParameter(DonationRecordLogic.PERSON_ID));
         Person personEntity = em.find(Person.class,personInt );
         
-        Integer donationID= Integer.parseInt(request.getParameter(DonationRecordLogic.DONATION_ID));
-        BloodDonation bloodDonationEntity = em.find(BloodDonation.class,donationID );
-        
-  /**
-   * check if dependency blood bank entity exists. if not, generate error message
-   */              
-        if (bloodDonationEntity == null) {
-            errorMessage = " BloodDonation : \"" + DonationRecordLogic.DONATION_ID + "\" does not exists";
+        Integer donationInt= Integer.parseInt(request.getParameter(DonationRecordLogic.DONATION_ID));
+        BloodDonation donationEntity = em.find(BloodDonation.class,donationInt );
+                
+     // check if dependency blood bank entity exists. if not, generate error message
+             
+        if (donationEntity == null) {
+            errorMessage = " BloodDonation : \"" + DonationRecordLogic.DONATION_ID + "\" does not exist";
         } else if (personEntity == null) {
             errorMessage = "Person : \"" + DonationRecordLogic.PERSON_ID + "\" does not exists";
         } else {
@@ -157,7 +160,7 @@ public class CreateDonationRecord extends HttpServlet {
                 logic.add(donationRecord);
 
             } catch (Exception ex) {
-                Logger.getLogger(CreateBloodDonation.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CreateDonationRecord.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -167,7 +170,7 @@ public class CreateDonationRecord extends HttpServlet {
             response.sendRedirect("DonationRecordTable");
         }
     }
-
+        
     /**
      * Returns a short description of the servlet.
      *
