@@ -127,7 +127,6 @@ private String errorMessage = null;
             out.printf( "<input type=\"datetime-local\" name=\"%s\"><br>", DonationRecordLogic.CREATED );
             out.println("<br>");
             
-            out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
             out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
             out.println("</form>");
             
