@@ -218,6 +218,7 @@ public class DonationRecordLogic extends GenericLogic<DonationRecord, DonationRe
         if (e.getBloodDonation() != null) {
             bloodDonation = e.getBloodDonation().getId().toString();
         }
+        
         return Arrays.asList(e.getId(), e.getPerson(), bloodDonation, e.getTested(), e.getAdministrator(), e.getHospital(), e.getCreated());
     }    
 }

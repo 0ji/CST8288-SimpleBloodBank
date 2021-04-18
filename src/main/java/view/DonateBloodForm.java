@@ -232,7 +232,11 @@ private String errorMessage = null;
             try {
                 donationRecord = drLogic.createEntity(request.getParameterMap());
                 donationRecord.setBloodDonation(bloodDonation);
+                String bd = (bloodDonation.toString());
+                log(bd);
                 donationRecord.setPerson(person);
+                String p = (person.toString());
+                log(p);
                 
                 drLogic.add(donationRecord);
 
