@@ -6,6 +6,7 @@ import entity.Person;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -88,17 +89,29 @@ public class PersonLogic extends GenericLogic<Person, PersonDAL> {
                 throw new ValidationException( error );
             }
         };
-        String birthDate = parameterMap.get(BIRTH)[0];
-        String newBirthDate = birthDate.replace("T", " ");
-        newBirthDate = newBirthDate.concat(":00");
         
-        Date birth = convertStringToDate(newBirthDate);
+        if (parameterMap.containsKey(BIRTH)) {
+            try {
+                Date date = convertStringToDate(parameterMap.get(BIRTH)[0]);
+                entity.setBirth(date);
+            } catch (Exception e) {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+                Date currentDate = new Date(System.currentTimeMillis());
+                String formattedDate = (formatter.format(currentDate));
+                Date convertedFormattedDate = convertStringToDate(formattedDate);
+                entity.setBirth(convertedFormattedDate);
+                //throw new ValidationException(e);
+            }
+        }else{
+          entity.setBirth(Calendar.getInstance().getTime());
+       }
+        
         String firstName = parameterMap.get(FIRST_NAME)[0];
         String lastName = parameterMap.get(LAST_NAME)[0];
         String phone = parameterMap.get(PHONE)[0];
         String address = parameterMap.get(ADDRESS)[0];
         
-        
+               
         validator.accept(firstName, 50);
         validator.accept(lastName, 50);
         validator.accept(phone, 15);
@@ -108,7 +121,6 @@ public class PersonLogic extends GenericLogic<Person, PersonDAL> {
         entity.setLastName(lastName);
         entity.setPhone(phone);
         entity.setAddress(address);
-        entity.setBirth(birth);
         
         return entity;
     }
