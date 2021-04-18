@@ -137,13 +137,13 @@ public class CreateDonationRecord extends HttpServlet {
             throws ServletException, IOException {
         log("POST");
         
-        EntityManager em = EMFactory.getEMF().createEntityManager();
-        
+        EntityManager personEM = EMFactory.getEMF().createEntityManager();
         Integer personInt= Integer.parseInt(request.getParameter(DonationRecordLogic.PERSON_ID));
-        Person personEntity = em.find(Person.class,personInt );
+        Person personEntity = personEM.find(Person.class,personInt );
         
+        EntityManager donationEM = EMFactory.getEMF().createEntityManager();
         Integer donationInt= Integer.parseInt(request.getParameter(DonationRecordLogic.DONATION_ID));
-        BloodDonation donationEntity = em.find(BloodDonation.class,donationInt );
+        BloodDonation donationEntity = donationEM.find(BloodDonation.class,donationInt );
                 
      // check if dependency blood bank entity exists. if not, generate error message
              

@@ -187,11 +187,12 @@ private String errorMessage = null;
         String lastName = request.getParameter( PersonLogic.LAST_NAME );
         
         String fullName = firstName +" "+ lastName;
-        Person person;
+        
+                Person person;
+                person = pLogic.createEntity( request.getParameterMap() );
         
         if( pLogic.getPersonWithFirstName( firstName ).isEmpty()) {
             try {
-                person = pLogic.createEntity( request.getParameterMap() );
                 pLogic.add( person );
                 errorMessage = null;
             } catch( Exception ex ) {
@@ -202,20 +203,22 @@ private String errorMessage = null;
             errorMessage = "Name: \"" + fullName + "\" already exists";
         }
         
-        EntityManager em = EMFactory.getEMF().createEntityManager();
+        EntityManager bankEM = EMFactory.getEMF().createEntityManager();
         Integer bbInt= Integer.parseInt(request.getParameter(BloodDonationLogic.BANK_ID));
-        BloodBank bb = em.find(BloodBank.class,bbInt );
+        BloodBank bb = bankEM.find(BloodBank.class,bbInt );
         BloodDonationLogic bdLogic = LogicFactory.getFor("BloodDonation");
-        BloodDonation bloodDonation;
   /**
    * check if dependency blood bank entity exists. if not, generate error message
-   */              
+   */   
+  
+                BloodDonation bloodDonation;
+                bloodDonation = bdLogic.createEntity(request.getParameterMap());
+                
         if (bb == null) {
             errorMessage = "BloodBank: \"" + BloodDonationLogic.BANK_ID + "\" does not exists";
         } else {
             try {
-              
-                bloodDonation = bdLogic.createEntity(request.getParameterMap());
+                bloodDonation.setBloodBank(bb);
                 bdLogic.add(bloodDonation);
 
             } catch (Exception ex) {
@@ -223,21 +226,12 @@ private String errorMessage = null;
             }
         }
        
-        //EntityManager em = EMFactory.getEMF().createEntityManager();
-        DonationRecord donationRecord;
-        person = pLogic.createEntity(request.getParameterMap());
-        bloodDonation = bdLogic.createEntity(request.getParameterMap());
         DonationRecordLogic drLogic = LogicFactory.getFor("DonationRecord");
+        DonationRecord donationRecord = drLogic.createEntity(request.getParameterMap());
         
             try {
-                donationRecord = drLogic.createEntity(request.getParameterMap());
                 donationRecord.setBloodDonation(bloodDonation);
-                String bd = (bloodDonation.toString());
-                log(bd);
                 donationRecord.setPerson(person);
-                String p = (person.toString());
-                log(p);
-                
                 drLogic.add(donationRecord);
 
             } catch (Exception ex) {
