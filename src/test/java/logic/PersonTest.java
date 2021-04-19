@@ -249,11 +249,12 @@ public class PersonTest {
         sampleMap.replace( PersonLogic.ADDRESS, new String[]{} );
         assertThrows( IndexOutOfBoundsException.class, () -> logic.createEntity( sampleMap ) );
         
-        fillMap.accept( sampleMap );
-        sampleMap.replace( PersonLogic.BIRTH, null );
-        assertThrows( NullPointerException.class, () -> logic.createEntity( sampleMap ) );
-        sampleMap.replace( PersonLogic.BIRTH, new String[]{} );
-        assertThrows( IndexOutOfBoundsException.class, () -> logic.createEntity( sampleMap ) );
+        // can be empty and null since date will just get current time/date
+//        fillMap.accept( sampleMap );
+//        sampleMap.replace( PersonLogic.BIRTH, null );
+//        assertThrows( NullPointerException.class, () -> logic.createEntity( sampleMap ) );
+//        sampleMap.replace( PersonLogic.BIRTH, new String[]{} );
+//        assertThrows( IndexOutOfBoundsException.class, () -> logic.createEntity( sampleMap ) );
     }
     
     @Test
