@@ -38,7 +38,6 @@ import org.junit.jupiter.api.TestMethodOrder;
  *
  * @author Shariar (Shawn) Emami
  */
-@Disabled
 @TestMethodOrder(OrderAnnotation.class)
 class BloodDonationTest {
 //

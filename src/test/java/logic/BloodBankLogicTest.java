@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Disabled;
  *
  * @author koji
  */
-@Disabled
 public class BloodBankLogicTest {
     
     private BloodBankLogic logic;

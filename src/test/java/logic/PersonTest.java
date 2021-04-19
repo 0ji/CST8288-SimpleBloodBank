@@ -27,7 +27,6 @@ import org.junit.jupiter.api.TestMethodOrder;
  *
  * @author Jamie
  */
-@Disabled
 @TestMethodOrder(OrderAnnotation.class)
 public class PersonTest {
     private PersonLogic logic;
