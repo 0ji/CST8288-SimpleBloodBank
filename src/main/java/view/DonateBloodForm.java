@@ -199,6 +199,14 @@ public class DonateBloodForm extends HttpServlet {
 
         Person person;
         person = pLogic.createEntity(request.getParameterMap());
+        EntityManager bankEM = EMFactory.getEMF().createEntityManager();
+        Integer bbInt = Integer.parseInt(request.getParameter(BloodDonationLogic.BANK_ID));
+        BloodBank bb = bankEM.find(BloodBank.class, bbInt);
+        BloodDonationLogic bdLogic = LogicFactory.getFor("BloodDonation");
+        BloodDonation bloodDonation;
+        bloodDonation = bdLogic.createEntity(request.getParameterMap());
+        DonationRecordLogic drLogic = LogicFactory.getFor("DonationRecord");
+        DonationRecord donationRecord = drLogic.createEntity(request.getParameterMap());
 
         if (pLogic.getPersonWithFirstName(firstName).isEmpty()) {
             try {
@@ -212,17 +220,11 @@ public class DonateBloodForm extends HttpServlet {
             errorMessage = "Name: \"" + fullName + "\" already exists";
         }
 
-        EntityManager bankEM = EMFactory.getEMF().createEntityManager();
-        Integer bbInt = Integer.parseInt(request.getParameter(BloodDonationLogic.BANK_ID));
-        BloodBank bb = bankEM.find(BloodBank.class, bbInt);
-        BloodDonationLogic bdLogic = LogicFactory.getFor("BloodDonation");
         /**
          * check if dependency blood bank entity exists. if not, generate error
          * message
          */
 
-        BloodDonation bloodDonation;
-        bloodDonation = bdLogic.createEntity(request.getParameterMap());
 
         if (bb == null) {
             errorMessage = "BloodBank: \"" + BloodDonationLogic.BANK_ID + "\" does not exists";
@@ -236,8 +238,6 @@ public class DonateBloodForm extends HttpServlet {
             }
         }
 
-        DonationRecordLogic drLogic = LogicFactory.getFor("DonationRecord");
-        DonationRecord donationRecord = drLogic.createEntity(request.getParameterMap());
 
         try {
             donationRecord.setBloodDonation(bloodDonation);
